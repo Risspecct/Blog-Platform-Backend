@@ -1,0 +1,40 @@
+# Ignore target directory (build output)
+target/
+
+# Ignore Maven wrapper JAR except the one inside .mvn (used for mvnw)
+!.mvn/wrapper/maven-wrapper.jar
+
+# Ignore build directory for Gradle
+build/
+
+# IDEs and Tools
+### STS (Spring Tool Suite) ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+# Sensitive Configuration
+src/main/resources/application.properties
+
+# Documentation (optional, only if you don't want to track this file)
+HELP.md
