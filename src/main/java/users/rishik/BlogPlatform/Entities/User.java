@@ -7,7 +7,7 @@ import lombok.Setter;
 import users.rishik.BlogPlatform.Enums.Roles;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "mail_id")})
 @Getter
 @Setter
 @NoArgsConstructor

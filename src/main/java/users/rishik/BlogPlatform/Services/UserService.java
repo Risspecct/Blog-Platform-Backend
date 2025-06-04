@@ -1,5 +1,6 @@
 package users.rishik.BlogPlatform.Services;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import users.rishik.BlogPlatform.Dtos.UpdateUserDto;
 import users.rishik.BlogPlatform.Dtos.UserDto;
@@ -15,6 +16,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     public UserService(UserRepository userRepository, UserMapper userMapper){
         this.userRepository = userRepository;
@@ -22,6 +24,9 @@ public class UserService {
     }
 
     public User addUser(UserDto userDto){
+        if (this.userRepository.existsByEmail(userDto.getEmail()))
+            throw new IllegalArgumentException("Email already exists");
+        userDto.setPwd(encoder.encode(userDto.getPwd()));
         User user = this.userMapper.UserDtoToUser(userDto);
         return this.userRepository.save(user);
     }
