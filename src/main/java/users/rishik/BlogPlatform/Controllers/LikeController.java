@@ -16,30 +16,17 @@ public class LikeController {
 
     @PostMapping("/addLike")
     public ResponseEntity<?> like(@PathVariable long userId, @PathVariable long postId){
-        try {
-            return new ResponseEntity<>(this.likeService.addLike(userId, postId), HttpStatus.CREATED);
-        } catch (Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return new ResponseEntity<>(this.likeService.addLike(userId, postId), HttpStatus.CREATED);
     }
 
     @GetMapping("/likes")
     public ResponseEntity<?> countLikes(@PathVariable long postId){
-        try{
-            return ResponseEntity.ok(this.likeService.getLikesByPost(postId));
-        } catch (Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(this.likeService.getLikesByPost(postId));
     }
 
     @DeleteMapping("/unlike")
-    public ResponseEntity<?> removeLike(@PathVariable long userId, @PathVariable long postId){
-        try{
-            this.likeService.removeLike(userId, postId);
-            return ResponseEntity.ok("Removed Like");
-        } catch (Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+    public ResponseEntity<?> removeLike(@PathVariable long userId, @PathVariable long postId) {
+        this.likeService.removeLike(userId, postId);
+        return ResponseEntity.ok("Removed Like");
     }
-
 }
