@@ -1,10 +1,12 @@
 package users.rishik.BlogPlatform.Entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
+@Getter
 @Table(name = "Likes")
 public class Like {
     @Id

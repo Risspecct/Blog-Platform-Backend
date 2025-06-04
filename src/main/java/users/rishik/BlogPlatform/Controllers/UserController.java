@@ -1,15 +1,15 @@
 package users.rishik.BlogPlatform.Controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import users.rishik.BlogPlatform.Dtos.UpdateUserDto;
 import users.rishik.BlogPlatform.Dtos.UserDto;
-import users.rishik.BlogPlatform.Entities.User;
+import users.rishik.BlogPlatform.Projections.UserView;
 import users.rishik.BlogPlatform.Services.UserService;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> addUser(@RequestBody UserDto userDto){
+    public ResponseEntity<?> addUser(@RequestBody @Valid UserDto userDto){
         return new ResponseEntity<>(this.userService.addUser(userDto), HttpStatus.CREATED);
     }
 
@@ -32,12 +32,12 @@ public class UserController {
 
     @GetMapping("/")
     public ResponseEntity<?> getAllUsers(){
-        List<User> users = this.userService.getAllUsers();
+        List<UserView> users = this.userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
     @PutMapping("/{id}/update")
-    public ResponseEntity<?> updateUser(@PathVariable long id,@RequestBody UpdateUserDto dto){
+    public ResponseEntity<?> updateUser(@PathVariable long id,@RequestBody @Valid UpdateUserDto dto){
         return ResponseEntity.ok(this.userService.updateUser(id, dto));
     }
 

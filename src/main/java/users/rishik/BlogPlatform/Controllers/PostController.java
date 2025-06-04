@@ -1,5 +1,6 @@
 package users.rishik.BlogPlatform.Controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class PostController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> addPost(@RequestBody PostDto postDto){
+    public ResponseEntity<?> addPost(@RequestBody @Valid PostDto postDto){
         return new ResponseEntity<>(this.postService.addPost(postDto), HttpStatus.CREATED);
     }
 
@@ -33,7 +34,7 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePost(@PathVariable long userId, @PathVariable long id, @RequestBody UpdatePostDto postDto){
+    public ResponseEntity<?> updatePost(@PathVariable long userId, @PathVariable long id, @RequestBody @Valid UpdatePostDto postDto){
         return new ResponseEntity<>(this.postService.updatePost(userId, id, postDto), HttpStatus.ACCEPTED);
     }
 

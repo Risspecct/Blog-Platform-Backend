@@ -13,7 +13,7 @@ public interface PostMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(source = "userId", target = "user", qualifiedByName = "findById")
+    @Mapping(source = "userId", target = "user", qualifiedByName = "findUserById")
     Post fromDtoToPost(PostDto postDto, @Context UserRepository userRepository);
 
     @Mapping(target = "id", ignore = true)
@@ -22,7 +22,7 @@ public interface PostMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Post UpdateFromDto(UpdatePostDto postDto, @MappingTarget Post post);
 
-    @Named("findById")
+    @Named("findUserById")
     default User findById(long user_id,@Context UserRepository userRepository){
         return userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User not found with id: " + user_id));
     }

@@ -19,6 +19,11 @@ public class CommentController {
         return new ResponseEntity<>(this.commentService.addComment(userId, postId, message), HttpStatus.CREATED);
     }
 
+    @GetMapping("posts/comments/{id}")
+    public ResponseEntity<?> getComment(@PathVariable long id){
+        return ResponseEntity.ok(this.commentService.getComment(id));
+    }
+
     @GetMapping("posts/{postId}/comments")
     public ResponseEntity<?> getAllComments(@PathVariable long postId){
         return ResponseEntity.ok(this.commentService.getCommentsByPostId(postId));
