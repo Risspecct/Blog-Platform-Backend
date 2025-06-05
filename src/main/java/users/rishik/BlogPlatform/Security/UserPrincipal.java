@@ -7,7 +7,6 @@ import users.rishik.BlogPlatform.Entities.User;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 public class UserPrincipal implements UserDetails {
     private final User user;
@@ -50,5 +49,9 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Long getUserId() {
+        return user.getId();
     }
 }

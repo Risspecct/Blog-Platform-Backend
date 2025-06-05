@@ -3,14 +3,16 @@ package users.rishik.BlogPlatform.Controllers;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import users.rishik.BlogPlatform.Dtos.PostDto;
 import users.rishik.BlogPlatform.Dtos.UpdatePostDto;
+import users.rishik.BlogPlatform.Security.UserPrincipal;
 import users.rishik.BlogPlatform.Services.PostService;
 
 
 @RestController
-@RequestMapping("/users/{userId}/posts")
+@RequestMapping("/posts")
 public class PostController {
     private final PostService postService;
 
@@ -19,8 +21,8 @@ public class PostController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> addPost(@RequestBody @Valid PostDto postDto){
-        return new ResponseEntity<>(this.postService.addPost(postDto), HttpStatus.CREATED);
+    public ResponseEntity<?> addPost(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid PostDto postDto){
+        return new ResponseEntity<>(this.postService.addPost(userPrincipal.getUserId(), postDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -29,18 +31,18 @@ public class PostController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<?> getAllPosts(@PathVariable long userId){
-        return ResponseEntity.ok(this.postService.getByUserId(userId));
+    public ResponseEntity<?> getAllPosts(@AuthenticationPrincipal UserPrincipal userPrincipal){
+        return ResponseEntity.ok(this.postService.getByUserId(userPrincipal.getUserId()));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePost(@PathVariable long userId, @PathVariable long id, @RequestBody @Valid UpdatePostDto postDto){
-        return new ResponseEntity<>(this.postService.updatePost(userId, id, postDto), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> updatePost(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable long id, @RequestBody @Valid UpdatePostDto postDto){
+        return new ResponseEntity<>(this.postService.updatePost(userPrincipal.getUserId(), id, postDto), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePost(@PathVariable long userId, @PathVariable long id) {
-        this.postService.deletePost(userId, id);
+    public ResponseEntity<?> deletePost(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable long id) {
+        this.postService.deletePost(userPrincipal.getUserId(), id);
         return ResponseEntity.ok("Post deleted Successfully");
     }
 }

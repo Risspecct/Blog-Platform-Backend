@@ -16,10 +16,12 @@ public class PostDto {
     @NotBlank
     private String body;
 
-    @NotNull
+
     private Long userId;
 
     public Long getUserId(){
         return userId;
     }
+
+    public void setUserId(long userId) { this.userId = userId; }
 }

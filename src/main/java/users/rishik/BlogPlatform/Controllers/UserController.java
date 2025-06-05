@@ -3,10 +3,14 @@ package users.rishik.BlogPlatform.Controllers;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import users.rishik.BlogPlatform.Dtos.UpdateUserDto;
 import users.rishik.BlogPlatform.Dtos.UserDto;
+import users.rishik.BlogPlatform.Entities.User;
 import users.rishik.BlogPlatform.Projections.UserView;
+import users.rishik.BlogPlatform.Security.UserPrincipal;
+import users.rishik.BlogPlatform.Services.CommentService;
 import users.rishik.BlogPlatform.Services.UserService;
 
 import java.util.List;
@@ -15,9 +19,11 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final CommentService commentService;
 
-    UserController(UserService userService){
+    UserController(UserService userService, CommentService commentService){
         this.userService = userService;
+        this.commentService = commentService;
     }
 
     @PostMapping("/register")
@@ -25,9 +31,14 @@ public class UserController {
         return new ResponseEntity<>(this.userService.addUser(userDto), HttpStatus.CREATED);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody @Valid User user){
+        return new ResponseEntity<>(this.userService.verify(user), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable long id){
-        return ResponseEntity.ok(this.userService.getUser(id));
+    public ResponseEntity<?> getUser(@AuthenticationPrincipal UserPrincipal userPrincipal){
+        return ResponseEntity.ok(this.userService.getUser(userPrincipal.getUserId()));
     }
 
     @GetMapping("/")
@@ -36,14 +47,19 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @PutMapping("/{id}/update")
-    public ResponseEntity<?> updateUser(@PathVariable long id,@RequestBody @Valid UpdateUserDto dto){
-        return ResponseEntity.ok(this.userService.updateUser(id, dto));
+    @GetMapping("/comments")
+    public ResponseEntity<?> getUserComments(@PathVariable long userId){
+        return ResponseEntity.ok(this.commentService.getCommentsByUserId(userId));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable long id){
-        this.userService.deleteUser(id);
-        return new ResponseEntity<>("User with id: " + id + " deleted", HttpStatus.ACCEPTED);
+    @PutMapping("/")
+    public ResponseEntity<?> updateUser(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid UpdateUserDto dto){
+        return ResponseEntity.ok(this.userService.updateUser(userPrincipal.getUserId(), dto));
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal UserPrincipal userPrincipal){
+        this.userService.deleteUser(userPrincipal.getUserId());
+        return new ResponseEntity<>("User with id: " + userPrincipal.getUserId() + " deleted", HttpStatus.ACCEPTED);
     }
 }

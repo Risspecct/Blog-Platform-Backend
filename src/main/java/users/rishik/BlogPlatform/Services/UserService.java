@@ -1,5 +1,8 @@
 package users.rishik.BlogPlatform.Services;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import users.rishik.BlogPlatform.Dtos.UpdateUserDto;
@@ -17,10 +20,15 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    private final JwtService jwtService;
+    private final AuthenticationManager authManager;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper){
+    public UserService(UserRepository userRepository, UserMapper userMapper,
+                       JwtService jwtService, AuthenticationManager authManager){
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.jwtService = jwtService;
+        this.authManager = authManager;
     }
 
     public User addUser(UserDto userDto){
@@ -32,7 +40,8 @@ public class UserService {
     }
 
     public UserView getUser(long id){
-        return this.userRepository.findUserById(id).orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+        return this.userRepository.findUserById(id)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
     }
 
     public List<UserView> getAllUsers(){
@@ -40,13 +49,25 @@ public class UserService {
     }
 
     public User updateUser(long id, UpdateUserDto userDto){
-        User user = this.userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+        User user = this.userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
         this.userMapper.updateFromDto(userDto, user);
         return this.userRepository.save(user);
     }
 
     public void deleteUser(long id){
         this.userRepository.deleteById(id);
+    }
+
+    public String verify(User user){
+        Authentication auth = this.authManager
+                .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPwd()));
+        if (auth.isAuthenticated()){
+            User existingUser = this.userRepository.findByEmail(user.getEmail())
+                                    .orElseThrow(() -> new NotFoundException("User not found with email: " + user.getEmail()));
+            return this.jwtService.generateToken(existingUser);
+        } else
+            return "Login Failed. Please try again";
     }
 
 }

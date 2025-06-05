@@ -2,11 +2,13 @@ package users.rishik.BlogPlatform.Controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import users.rishik.BlogPlatform.Security.UserPrincipal;
 import users.rishik.BlogPlatform.Services.LikeService;
 
 @RestController
-@RequestMapping("/users/{userId}/posts/{postId}")
+@RequestMapping("posts/{postId}")
 public class LikeController {
     private final LikeService likeService;
 
@@ -15,8 +17,8 @@ public class LikeController {
     }
 
     @PostMapping("/addLike")
-    public ResponseEntity<?> like(@PathVariable long userId, @PathVariable long postId){
-        return new ResponseEntity<>(this.likeService.addLike(userId, postId), HttpStatus.CREATED);
+    public ResponseEntity<?> like(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable long postId){
+        return new ResponseEntity<>(this.likeService.addLike(userPrincipal.getUserId(), postId), HttpStatus.CREATED);
     }
 
     @GetMapping("/likes")
@@ -25,8 +27,8 @@ public class LikeController {
     }
 
     @DeleteMapping("/unlike")
-    public ResponseEntity<?> removeLike(@PathVariable long userId, @PathVariable long postId) {
-        this.likeService.removeLike(userId, postId);
+    public ResponseEntity<?> removeLike(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable long postId) {
+        this.likeService.removeLike(userPrincipal.getUserId(), postId);
         return ResponseEntity.ok("Removed Like");
     }
 }

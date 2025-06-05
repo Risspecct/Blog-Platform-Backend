@@ -25,7 +25,8 @@ public class PostService {
         this.userRepository = userRepository;
     }
 
-    public PostView addPost(PostDto postDto){
+    public PostView addPost(long userId, PostDto postDto){
+        postDto.setUserId(userId);
         Post post = this.postMapper.fromDtoToPost(postDto, this.userRepository);
         this.postRepository.save(post);
         return this.postRepository.findPostById(post.getId()).orElseThrow(() -> new NotFoundException("Post unavailable"));
