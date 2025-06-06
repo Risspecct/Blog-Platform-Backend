@@ -7,7 +7,6 @@ import users.rishik.BlogPlatform.Entities.User;
 import users.rishik.BlogPlatform.Exceptions.NotFoundException;
 import users.rishik.BlogPlatform.Exceptions.UnauthorizedException;
 import users.rishik.BlogPlatform.Projections.CommentView;
-import users.rishik.BlogPlatform.Repositories.CommentRepository;
 import users.rishik.BlogPlatform.Repositories.PostRepository;
 import users.rishik.BlogPlatform.Repositories.UserRepository;
 
@@ -16,17 +15,17 @@ import java.util.List;
 
 @Service
 public class CommentService {
-    private final CommentRepository commentRepository;
+    private final users.rishik.BlogPlatform.Repositories.CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    CommentService(CommentRepository commentRepository, UserRepository userRepository, PostRepository postRepository){
+    CommentService(users.rishik.BlogPlatform.Repositories.CommentRepository commentRepository, UserRepository userRepository, PostRepository postRepository){
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.postRepository = postRepository;
     }
 
-    public Comment addComment(long userId, long postId, String message){
+    public CommentView addComment(long userId, long postId, String message){
         User user = this.userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found with id:" + userId));
         Post post = this.postRepository.findById(postId).orElseThrow(() -> new NotFoundException("Post not found with id:" + postId));
         if (message == null) throw new InvalidParameterException("Comment cant be blank");
@@ -34,7 +33,8 @@ public class CommentService {
         comment.setUser(user);
         comment.setPost(post);
         comment.setComment(message);
-        return this.commentRepository.save(comment);
+        this.commentRepository.save(comment);
+        return this.commentRepository.findCommentById(comment.getId());
     }
 
     public CommentView getComment(long id){

@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import users.rishik.BlogPlatform.Enums.Roles;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "mail_id")})
 @Getter
@@ -30,7 +33,11 @@ public class User {
     @Column(name = "bio")
     private String bio;
 
-    @Column(name = "Role")
-    private Roles role;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "role")
+    private Set<Roles> roles = new HashSet<>();
 
+    private boolean banned = false;
 }

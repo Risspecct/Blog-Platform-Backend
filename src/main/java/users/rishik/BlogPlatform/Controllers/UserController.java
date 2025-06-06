@@ -3,6 +3,7 @@ package users.rishik.BlogPlatform.Controllers;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import users.rishik.BlogPlatform.Dtos.UpdateUserDto;
@@ -36,27 +37,32 @@ public class UserController {
         return new ResponseEntity<>(this.userService.verify(user), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('VIEWER')")
+    @GetMapping("/")
     public ResponseEntity<?> getUser(@AuthenticationPrincipal UserPrincipal userPrincipal){
         return ResponseEntity.ok(this.userService.getUser(userPrincipal.getUserId()));
     }
 
-    @GetMapping("/")
+    @PreAuthorize("hasAnyRole('MOD')")
+    @GetMapping("/all")
     public ResponseEntity<?> getAllUsers(){
         List<UserView> users = this.userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
+    @PreAuthorize("hasRole('VIEWER')")
     @GetMapping("/comments")
-    public ResponseEntity<?> getUserComments(@PathVariable long userId){
-        return ResponseEntity.ok(this.commentService.getCommentsByUserId(userId));
+    public ResponseEntity<?> getUserComments(@AuthenticationPrincipal UserPrincipal userPrincipal){
+        return ResponseEntity.ok(this.commentService.getCommentsByUserId(userPrincipal.getUserId()));
     }
 
+    @PreAuthorize("hasRole('VIEWER')")
     @PutMapping("/")
     public ResponseEntity<?> updateUser(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid UpdateUserDto dto){
         return ResponseEntity.ok(this.userService.updateUser(userPrincipal.getUserId(), dto));
     }
 
+    @PreAuthorize("hasRole('VIEWER')")
     @DeleteMapping("/")
     public ResponseEntity<?> deleteUser(@AuthenticationPrincipal UserPrincipal userPrincipal){
         this.userService.deleteUser(userPrincipal.getUserId());

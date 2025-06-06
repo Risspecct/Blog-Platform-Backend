@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import users.rishik.BlogPlatform.Enums.Roles;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 public class UserDto {
@@ -22,5 +24,5 @@ public class UserDto {
 
     private String bio;
 
-    private Roles role = Roles.VIEWER;
+    private Set<Roles> roles;
 }

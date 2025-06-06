@@ -2,6 +2,7 @@ package users.rishik.BlogPlatform.Controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import users.rishik.BlogPlatform.Security.UserPrincipal;
@@ -9,6 +10,7 @@ import users.rishik.BlogPlatform.Services.CommentService;
 
 @RestController
 @RequestMapping("/posts/{postId}/comments")
+@PreAuthorize("hasRole('VIEWER')")
 public class CommentController {
     private final CommentService commentService;
 

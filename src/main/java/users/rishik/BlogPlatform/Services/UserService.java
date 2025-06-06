@@ -8,12 +8,14 @@ import org.springframework.stereotype.Service;
 import users.rishik.BlogPlatform.Dtos.UpdateUserDto;
 import users.rishik.BlogPlatform.Dtos.UserDto;
 import users.rishik.BlogPlatform.Entities.User;
+import users.rishik.BlogPlatform.Enums.Roles;
 import users.rishik.BlogPlatform.Exceptions.NotFoundException;
 import users.rishik.BlogPlatform.Mappers.UserMapper;
 import users.rishik.BlogPlatform.Projections.UserView;
 import users.rishik.BlogPlatform.Repositories.UserRepository;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -31,12 +33,17 @@ public class UserService {
         this.authManager = authManager;
     }
 
-    public User addUser(UserDto userDto){
+    public UserView addUser(UserDto userDto){
+        if (userDto.getRoles() == null || userDto.getRoles().isEmpty()){
+            userDto.setRoles(Set.of(Roles.VIEWER));
+        }
         if (this.userRepository.existsByEmail(userDto.getEmail()))
             throw new IllegalArgumentException("Email already exists");
         userDto.setPwd(encoder.encode(userDto.getPwd()));
         User user = this.userMapper.UserDtoToUser(userDto);
-        return this.userRepository.save(user);
+        this.userRepository.save(user);
+        return this.userRepository.findUserById(user.getId())
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + user.getId()));
     }
 
     public UserView getUser(long id){
@@ -48,11 +55,13 @@ public class UserService {
         return this.userRepository.findAllBy();
     }
 
-    public User updateUser(long id, UpdateUserDto userDto){
+    public UserView updateUser(long id, UpdateUserDto userDto){
         User user = this.userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
         this.userMapper.updateFromDto(userDto, user);
-        return this.userRepository.save(user);
+        this.userRepository.save(user);
+        return this.userRepository.findUserById(user.getId())
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + user.getId()));
     }
 
     public void deleteUser(long id){

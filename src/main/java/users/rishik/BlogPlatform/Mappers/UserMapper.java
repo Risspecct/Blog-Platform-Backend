@@ -8,10 +8,12 @@ import users.rishik.BlogPlatform.Entities.User;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "banned", ignore = true)
     User UserDtoToUser(UserDto userDto);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "banned", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateFromDto(UpdateUserDto dto, @MappingTarget User user);
 }

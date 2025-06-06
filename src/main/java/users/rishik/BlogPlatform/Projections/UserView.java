@@ -6,5 +6,5 @@ public interface UserView {
     long getId();
     String getUsername();
     String getBio();
-    Roles getRole();
+    Roles getRoles();
 }
