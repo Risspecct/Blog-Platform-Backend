@@ -60,8 +60,10 @@ public class UserService {
     public UserView updateUser(long id, UpdateUserDto userDto){
         User user = this.userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
-        if (userDto.getRoles().equals(Set.of(Roles.MOD)) || userDto.getRoles().equals(Set.of(Roles.ADMIN)))
-            throw new IllegalArgumentException("Cannot add user with this role. Ask admin for permission");
+        if (userDto.getRoles() != null &&
+                userDto.getRoles().stream().anyMatch(role -> role == Roles.MOD || role == Roles.ADMIN)) {
+            throw new IllegalArgumentException("Cannot assign elevated roles");
+        }
         this.userMapper.updateFromDto(userDto, user);
         this.userRepository.save(user);
         return this.userRepository.findUserById(user.getId())

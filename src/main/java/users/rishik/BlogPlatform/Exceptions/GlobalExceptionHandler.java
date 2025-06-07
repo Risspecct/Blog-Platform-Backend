@@ -18,7 +18,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.stream.Collectors;
 
-@SuppressWarnings("usused")
+@SuppressWarnings("unused")
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

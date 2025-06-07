@@ -10,7 +10,7 @@ import users.rishik.BlogPlatform.Services.LikeService;
 
 @RestController
 @RequestMapping("posts/{postId}")
-@PreAuthorize("hasRole('Viewer')")
+@PreAuthorize("hasRole('VIEWER')")
 public class LikeController {
     private final LikeService likeService;
 
