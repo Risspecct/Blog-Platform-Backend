@@ -43,7 +43,7 @@ public class UserController {
         return ResponseEntity.ok(this.userService.getUser(userPrincipal.getUserId()));
     }
 
-    @PreAuthorize("hasAnyRole('MOD')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<?> getAllUsers(){
         List<UserView> users = this.userService.getAllUsers();

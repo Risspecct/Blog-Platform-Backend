@@ -42,14 +42,16 @@ public class CommentService {
         return this.commentRepository.findCommentById(id);
     }
 
-    public List<CommentView> getCommentsByPostId(long postId){
-        return this.commentRepository.findByPostId(postId)
-                .orElseThrow(() -> new NotFoundException("No Comments for this post"));
+    public List<CommentView> getCommentsByPostId(long postId) {
+        if (this.postRepository.existsById(postId)) {
+            return this.commentRepository.findByPostId(postId);
+        } else throw new NotFoundException("Post unavailable");
     }
 
     public List<CommentView> getCommentsByUserId(long userId){
-        return this.commentRepository.findByUserId(userId)
-                .orElseThrow(() -> new NotFoundException("No comments found by user"));
+        if (this.userRepository.existsById(userId)){
+        return this.commentRepository.findByUserId(userId);
+        } else throw new NotFoundException("User doesnt exist");
     }
 
     public CommentView updateComment(long userId, long id, String message){

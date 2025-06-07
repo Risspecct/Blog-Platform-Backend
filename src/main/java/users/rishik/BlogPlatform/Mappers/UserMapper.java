@@ -12,7 +12,6 @@ public interface UserMapper {
     User UserDtoToUser(UserDto userDto);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "roles", ignore = true)
     @Mapping(target = "banned", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateFromDto(UpdateUserDto dto, @MappingTarget User user);

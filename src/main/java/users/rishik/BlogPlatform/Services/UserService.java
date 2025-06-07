@@ -37,6 +37,8 @@ public class UserService {
         if (userDto.getRoles() == null || userDto.getRoles().isEmpty()){
             userDto.setRoles(Set.of(Roles.VIEWER));
         }
+        if (userDto.getRoles().equals(Set.of(Roles.MOD)) || userDto.getRoles().equals(Set.of(Roles.ADMIN)))
+            throw new IllegalArgumentException("Cannot add user with this role. Ask admin for permission");
         if (this.userRepository.existsByEmail(userDto.getEmail()))
             throw new IllegalArgumentException("Email already exists");
         userDto.setPwd(encoder.encode(userDto.getPwd()));
@@ -58,6 +60,8 @@ public class UserService {
     public UserView updateUser(long id, UpdateUserDto userDto){
         User user = this.userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+        if (userDto.getRoles().equals(Set.of(Roles.MOD)) || userDto.getRoles().equals(Set.of(Roles.ADMIN)))
+            throw new IllegalArgumentException("Cannot add user with this role. Ask admin for permission");
         this.userMapper.updateFromDto(userDto, user);
         this.userRepository.save(user);
         return this.userRepository.findUserById(user.getId())
