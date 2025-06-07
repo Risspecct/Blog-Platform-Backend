@@ -1,0 +1,20 @@
+spring.application.name=BlogPlatform
+
+# Database properties
+spring.datasource.url=jdbc:mysql://localhost:3306/db_name
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# JPA Properties
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# Jwt Configuration
+jwt.secret = your_jwt_secret_key
+jwt.expiration = expiration_time_in_ms
+
+# Exception for Handlers
+spring.mvc.throw-exception-if-no-handler-found=true
+spring.web.resources.add-mappings=false
