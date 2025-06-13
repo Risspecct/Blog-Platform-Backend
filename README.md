@@ -1,46 +1,45 @@
 # 📝 Risspecct Blog Platform Backend
 
-A Spring Boot-based RESTful API for a role-secured blogging platform with JWT authentication, user role hierarchy, and full CRUD support for posts, comments, and likes.
+![Java](https://img.shields.io/badge/java-21-blue.svg)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2%2B-6DB33F.svg)
+
+A secure, role-based blogging platform backend built with Spring Boot. Features include JWT authentication, user role hierarchy, and full CRUD operations for posts, comments, and likes.
 
 ---
 
 ## 🚀 Features
 
-* User registration & login with JWT-based authentication
-* Secure password hashing with BCrypt
+* Register & login with JWT authentication
+* Secure password hashing using BCrypt
 * Role-based access: `VIEWER`, `AUTHOR`, `MOD`, `ADMIN`
 * Users can:
 
-    * Create, edit, delete their posts
-    * Comment on and like posts
-    * View posts and comments
+  * Create, update, delete their posts
+  * Comment on and like posts
+  * View posts, comments, and their own data
 * Moderators can delete any post or comment
 * Admins can manage users (ban, delete, assign roles)
-* Global exception handling with detailed responses
-* Clean DTO to Entity mapping using MapStruct
+* Global exception handling with descriptive error messages
+* Clean DTO ↔ Entity mapping using MapStruct
 
 ---
 
 ## 📁 Project Structure
 
-```bash
+```
 risspecct-blog-platform-backend/
-├── src/main/java/users/rishik/BlogPlatform/
-│   ├── Controllers/        # REST API controllers
-│   ├── Entities/           # JPA entities
-│   ├── Dtos/               # DTOs for request/response
-│   ├── Services/           # Business logic services
-│   ├── Repositories/       # Spring Data JPA repositories
-│   ├── Filters/            # JWT authentication filter
-│   ├── Security/           # JWT config, role hierarchy, user principal
-│   ├── Exceptions/         # Global and custom exceptions
-│   ├── Mappers/            # MapStruct mappers
-│   └── Enums/              # Role enum
+├── Controllers/
+├── Entities/
+├── Dtos/
+├── Services/
+├── Repositories/
+├── Filters/
+├── Security/
+├── Exceptions/
+├── Mappers/
+├── Enums/
 ├── postman/
-│   └── blog-platform-api.postman_collection.json
-├── src/main/resources/
-│   └── application.properties.example  # Configuration example
-├── pom.xml
+├── src/main/resources
 ```
 
 ---
@@ -56,59 +55,68 @@ risspecct-blog-platform-backend/
 
 ---
 
-## 🧪 API Testing with Postman
+## 🔧 Endpoints Overview
 
-A full-featured Postman collection is included:
+### ⚖️ Auth
 
-**File:** `postman/blog-platform-api.postman_collection.json`
+* `POST /users/register` - Register a new user
+* `POST /users/login` - Login and receive JWT token
 
-### ⚙️ Usage
+### 👤 User
 
-1. Open Postman
-2. Import the `.json` collection
-3. Run `POST /users/login` to get a JWT
-4. The token is saved to `{{token}}` for use in all authenticated requests
-5. Test endpoints organized into folders:
+* `GET /users/` - Get current user info
+* `PUT /users/` - Update current user
+* `DELETE /users/` - Delete own account
+* `GET /users/comments` - Get user's comments
+* `GET /users/all` - (Admin) Get all users
 
-    * Auth
-    * Posts
-    * Comments
-    * Likes
-    * Admin
-    * Moderator
-    * Error Scenarios
+### 📄 Posts
+
+* `POST /posts` - Add a new post (Author only)
+* `GET /posts/{id}` - Get a single post
+* `GET /users/me/posts` - Get all posts by current user
+* `GET /users/{userId}/posts` - Get all posts by another user
+* `PUT /posts/{id}` - Update own post
+* `DELETE /posts/{id}` - Delete own post
+
+### 💬 Comments
+
+* `POST /posts/{postId}/comments` - Add a comment
+* `GET /posts/{postId}/comments/` - Get all comments for a post
+* `GET /posts/{postId}/comments/{id}` - Get a single comment
+* `PUT /posts/{postId}/comments/{id}` - Update own comment
+* `DELETE /posts/{postId}/comments/{id}` - Delete own comment
+
+### ❤️ Likes
+
+* `POST /posts/{postId}/addLike` - Add a like
+* `GET /posts/{postId}/likes` - Count likes for a post
+* `DELETE /posts/{postId}/unlike` - Remove a like
+
+### 🛡️ Admin
+
+* `PUT /admin/users/roles/{userId}` - Set user roles
+* `PUT /admin/users/ban/{userId}` - Ban/unban user
+* `DELETE /admin/users/delete/{userId}` - Delete user
+
+### 🧰 Moderator
+
+* `DELETE /mod/delete/posts/{postId}` - Delete any post
+* `DELETE /mod/delete/comments/{commentId}` - Delete any comment
 
 ---
 
-## ⚙️ Configuration
-
-Use the included `application.properties.example` file:
-
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/blog_platform
-spring.datasource.username=root
-spring.datasource.password=your_password
-spring.jpa.hibernate.ddl-auto=update
-jwt.secret=your_jwt_secret_key
-jwt.expiration=3600000
-```
-
-1. Rename it to `application.properties`
-2. Fill in your database and JWT settings
-
----
-
-## 🛡️ Security Overview
+## 🛡️ Security Highlights
 
 * Stateless JWT authentication
 * Role hierarchy: `ADMIN > MOD > AUTHOR > VIEWER`
-* Access control via `@PreAuthorize`
-* BCrypt for secure password hashing
-* Custom exception handling for 401, 403, 404, etc.
+* `@PreAuthorize` annotations for fine-grained control
+* BCrypt hashing for secure passwords
+* Custom exception handling for 401/403/404/500 errors
 
 ---
 
-## 📆 Tech Stack
+## 🌱 Tech Stack
 
 * Java 21
 * Spring Boot 3
@@ -121,7 +129,7 @@ jwt.expiration=3600000
 
 ---
 
-## 📦 Build & Run
+## 📦 Setup & Run
 
 ### Prerequisites
 
@@ -129,23 +137,34 @@ jwt.expiration=3600000
 * Maven
 * MySQL 8+
 
-### Run Locally
+### Steps
 
 ```bash
 git clone https://github.com/your-username/risspecct-blog-platform-backend.git
 cd risspecct-blog-platform-backend
 cp src/main/resources/application.properties.example src/main/resources/application.properties
+# configure DB and JWT settings in application.properties
 ./mvnw spring-boot:run
 ```
 
 ---
 
-## 📝 License
+## 🔮 Postman Collection
+
+A full-featured Postman collection is provided in `postman/blog-platform-api.postman_collection.json`
+
+1. Import the file in Postman
+2. Run the login endpoint to obtain a JWT token
+3. Token is auto-assigned to `{{token}}` for future use
+
+---
+
+## 🖋️ License
 
 This project is licensed under the MIT License.
 
 ---
 
-## 🤝 Contributing
+## 🤝 Contributions
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Contributions are welcome! For significant changes, please open an issue first to discuss the changes you'd like to make.
