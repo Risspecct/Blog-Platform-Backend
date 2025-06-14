@@ -1,8 +1,5 @@
 # 📝 Risspecct Blog Platform Backend
 
-![Java](https://img.shields.io/badge/java-21-blue.svg)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2%2B-6DB33F.svg)
-
 A secure, role-based blogging platform backend built with Spring Boot. Features include JWT authentication, user role hierarchy, and full CRUD operations for posts, comments, and likes.
 
 ---
@@ -21,6 +18,7 @@ A secure, role-based blogging platform backend built with Spring Boot. Features 
 * Admins can manage users (ban, delete, assign roles)
 * Global exception handling with descriptive error messages
 * Clean DTO ↔ Entity mapping using MapStruct
+* **Interactive Swagger UI for API testing and documentation**
 
 ---
 
@@ -129,7 +127,7 @@ risspecct-blog-platform-backend/
 
 ---
 
-## 📦 Setup & Run
+## 🛆 Setup & Run
 
 ### Prerequisites
 
@@ -147,6 +145,13 @@ cp src/main/resources/application.properties.example src/main/resources/applicat
 ./mvnw spring-boot:run
 ```
 
+Then open:
+
+* **Swagger UI:** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+* **OpenAPI JSON Spec:** [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+
+Use the "Authorize" button at the top of Swagger UI to paste your JWT token (`Bearer <token>`) and test secured endpoints.
+
 ---
 
 ## 🔮 Postman Collection
@@ -159,7 +164,7 @@ A full-featured Postman collection is provided in `postman/blog-platform-api.pos
 
 ---
 
-## 🖋️ License
+##  📃License
 
 This project is licensed under the MIT License.
 
