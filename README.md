@@ -1,5 +1,10 @@
 # 📝 Risspecct Blog Platform Backend
 
+![Java](https://img.shields.io/badge/Java-21-blue.svg)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.5-6DB33F.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Build](https://img.shields.io/badge/Status-Active-success)
+
 A secure, role-based blogging platform backend built with Spring Boot. Features include JWT authentication, user role hierarchy, and full CRUD operations for posts, comments, and likes.
 
 ---
@@ -13,7 +18,7 @@ A secure, role-based blogging platform backend built with Spring Boot. Features 
 
   * Create, update, delete their posts
   * Comment on and like posts
-  * View posts, comments, and their own data
+  * View posts, comments, and own data
 * Moderators can delete any post or comment
 * Admins can manage users (ban, delete, assign roles)
 * Global exception handling with descriptive error messages
@@ -37,7 +42,7 @@ risspecct-blog-platform-backend/
 ├── Mappers/
 ├── Enums/
 ├── postman/
-├── src/main/resources
+├── src/main/resources/
 ```
 
 ---
@@ -53,54 +58,54 @@ risspecct-blog-platform-backend/
 
 ---
 
-## 🔧 Endpoints Overview
+## 📌 API Endpoint Overview
 
-### ⚖️ Auth
+### ⚖️ Auth (`/users`)
 
-* `POST /users/register` - Register a new user
-* `POST /users/login` - Login and receive JWT token
+* `POST /register` – Register new user
+* `POST /login` – Authenticate and get JWT
 
-### 👤 User
+### 👤 User (`/users`)
 
-* `GET /users/` - Get current user info
-* `PUT /users/` - Update current user
-* `DELETE /users/` - Delete own account
-* `GET /users/comments` - Get user's comments
-* `GET /users/all` - (Admin) Get all users
+* `GET /` – View own profile
+* `PUT /` – Update own profile
+* `DELETE /` – Delete own account
+* `GET /comments` – Get own comments
+* `GET /all` – (Admin) View all users
 
-### 📄 Posts
+### 📄 Posts (`/posts`)
 
-* `POST /posts` - Add a new post (Author only)
-* `GET /posts/{id}` - Get a single post
-* `GET /users/me/posts` - Get all posts by current user
-* `GET /users/{userId}/posts` - Get all posts by another user
-* `PUT /posts/{id}` - Update own post
-* `DELETE /posts/{id}` - Delete own post
+* `POST /` – (Author) Add post
+* `GET /{id}` – View specific post
+* `PUT /{id}` – (Author) Update own post
+* `DELETE /{id}` – (Author) Delete own post
+* `GET /users/me/posts` – View own posts
+* `GET /users/{userId}/posts` – View posts by user
 
-### 💬 Comments
+### 💬 Comments (`/posts/{postId}/comments`)
 
-* `POST /posts/{postId}/comments` - Add a comment
-* `GET /posts/{postId}/comments/` - Get all comments for a post
-* `GET /posts/{postId}/comments/{id}` - Get a single comment
-* `PUT /posts/{postId}/comments/{id}` - Update own comment
-* `DELETE /posts/{postId}/comments/{id}` - Delete own comment
+* `POST /` – Add comment
+* `GET /` – Get all comments on a post
+* `GET /{id}` – Get single comment
+* `PUT /{id}` – Update own comment
+* `DELETE /{id}` – Delete own comment
 
-### ❤️ Likes
+### ❤️ Likes (`/posts/{postId}`)
 
-* `POST /posts/{postId}/addLike` - Add a like
-* `GET /posts/{postId}/likes` - Count likes for a post
-* `DELETE /posts/{postId}/unlike` - Remove a like
+* `POST /addLike` – Like a post
+* `GET /likes` – Get like count
+* `DELETE /unlike` – Remove like
 
-### 🛡️ Admin
+### 🛡️ Admin (`/admin`)
 
-* `PUT /admin/users/roles/{userId}` - Set user roles
-* `PUT /admin/users/ban/{userId}` - Ban/unban user
-* `DELETE /admin/users/delete/{userId}` - Delete user
+* `PUT /users/roles/{userId}` – Assign roles
+* `PUT /users/ban/{userId}` – Ban/unban user
+* `DELETE /users/delete/{userId}` – Delete user
 
-### 🧰 Moderator
+### 🩰 Moderator (`/mod`)
 
-* `DELETE /mod/delete/posts/{postId}` - Delete any post
-* `DELETE /mod/delete/comments/{commentId}` - Delete any comment
+* `DELETE /delete/posts/{postId}` – Delete any post
+* `DELETE /delete/comments/{commentId}` – Delete any comment
 
 ---
 
@@ -108,26 +113,35 @@ risspecct-blog-platform-backend/
 
 * Stateless JWT authentication
 * Role hierarchy: `ADMIN > MOD > AUTHOR > VIEWER`
-* `@PreAuthorize` annotations for fine-grained control
-* BCrypt hashing for secure passwords
-* Custom exception handling for 401/403/404/500 errors
+* `@PreAuthorize` annotations on secured routes
+* Custom exception handler for clean error responses
 
 ---
 
 ## 🌱 Tech Stack
 
 * Java 21
-* Spring Boot 3
+* Spring Boot 3.4+
 * Spring Security
 * Spring Data JPA (Hibernate)
-* MySQL
-* JWT
+* MySQL 8+
+* JWT (jjwt)
 * MapStruct
 * Lombok
 
 ---
 
-## 🛆 Setup & Run
+## 📚 API Documentation
+
+* **Swagger UI**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+* **OpenAPI JSON**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+* Shortcut: Access via `/docs` redirect
+
+Use the “Authorize” button and provide `Bearer <JWT>` to test secured endpoints.
+
+---
+
+## 🛠️ Setup & Run
 
 ### Prerequisites
 
@@ -141,35 +155,28 @@ risspecct-blog-platform-backend/
 git clone https://github.com/your-username/risspecct-blog-platform-backend.git
 cd risspecct-blog-platform-backend
 cp src/main/resources/application.properties.example src/main/resources/application.properties
-# configure DB and JWT settings in application.properties
+# edit DB and JWT settings in application.properties
 ./mvnw spring-boot:run
 ```
-
-Then open:
-
-* **Swagger UI:** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
-* **OpenAPI JSON Spec:** [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
-
-Use the "Authorize" button at the top of Swagger UI to paste your JWT token (`Bearer <token>`) and test secured endpoints.
 
 ---
 
 ## 🔮 Postman Collection
 
-A full-featured Postman collection is provided in `postman/blog-platform-api.postman_collection.json`
+Located at: `postman/blog-platform-api.postman_collection.json`
 
-1. Import the file in Postman
-2. Run the login endpoint to obtain a JWT token
-3. Token is auto-assigned to `{{token}}` for future use
+1. Import into Postman
+2. Use `/users/login` to retrieve a JWT
+3. JWT auto-assigned to `{{token}}` for all requests
 
 ---
 
-##  📃License
+## 📃 License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
 ## 🤝 Contributions
 
-Contributions are welcome! For significant changes, please open an issue first to discuss the changes you'd like to make.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you’d like to change.
