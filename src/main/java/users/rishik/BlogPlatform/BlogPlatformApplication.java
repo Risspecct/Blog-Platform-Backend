@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @OpenAPIDefinition(
 		info = @Info(title = "Blog Platform", version = "1.0"),
-		security = @SecurityRequirement(name = "bearerAuth") // <- Apply globally
+		security = @SecurityRequirement(name = "bearerAuth")
 )
 @SecurityScheme(
 		name = "bearerAuth",

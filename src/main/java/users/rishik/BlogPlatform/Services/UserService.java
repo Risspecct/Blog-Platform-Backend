@@ -5,6 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import users.rishik.BlogPlatform.Dtos.LoginUserDto;
 import users.rishik.BlogPlatform.Dtos.UpdateUserDto;
 import users.rishik.BlogPlatform.Dtos.UserDto;
 import users.rishik.BlogPlatform.Entities.User;
@@ -74,7 +75,7 @@ public class UserService {
         this.userRepository.deleteById(id);
     }
 
-    public String verify(User user){
+    public String verify(LoginUserDto user){
         Authentication auth = this.authManager
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPwd()));
         if (auth.isAuthenticated()){
