@@ -92,9 +92,9 @@ risspecct-blog-platform-backend/
 
 ### ❤️ Likes (`/posts/{postId}`)
 
-* `POST /addLike` – Like a post
+* `POST /like` – Like a post
 * `GET /likes` – Get like count
-* `DELETE /unlike` – Remove like
+* `DELETE /like` – Remove like
 
 ### 🛡️ Admin (`/admin`)
 
