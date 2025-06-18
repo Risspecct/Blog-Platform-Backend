@@ -1,6 +1,8 @@
 package users.rishik.BlogPlatform.Controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +27,11 @@ public class ModeratorController {
     }
 
     @Operation( summary = "Delete any post", description = "Mods can delete any post using this endpoint", tags = {"MOD"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Post deleted"),
+            @ApiResponse(responseCode = "403", description = "Not authorized to access this resource"),
+            @ApiResponse(responseCode = "404", description = "Post not found")
+    })
     @DeleteMapping("/delete/posts/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable long postId){
         this.postRepository.deleteById(postId);
@@ -32,6 +39,11 @@ public class ModeratorController {
     }
 
     @Operation( summary = "Delete any comment", description = "Mods can delete any comment using this endpoint", tags = {"MOD"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comment deleted"),
+            @ApiResponse(responseCode = "403", description = "Not authorized to access this resource"),
+            @ApiResponse(responseCode = "404", description = "Comment not found")
+    })
     @DeleteMapping("/delete/comments/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable long commentId){
         if (this.commentRepository.existsById(commentId)){
