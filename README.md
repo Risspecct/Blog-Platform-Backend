@@ -160,6 +160,46 @@ cp src/main/resources/application.properties.example src/main/resources/applicat
 ```
 
 ---
+## 🧪 Testing
+
+This project includes a comprehensive test suite for both the **service** and **controller** layers, using:
+
+- **JUnit 5**
+- **Mockito**
+- **Spring Security Test**
+
+All tests run against an **in-memory H2 database**, ensuring they are:
+- Fast
+- Isolated
+- Do not affect your local MySQL data
+
+---
+
+### Test Structure
+
+#### ✅ Pure Unit Tests
+`@ExtendWith(MockitoExtension.class)`  
+Used for **service-layer** testing to verify **business logic** without loading the Spring context.
+
+#### 🌐 Web Layer Slice Tests
+`@WebMvcTest`  
+Used for **controller-layer** testing to verify:
+- Security rules (`@PreAuthorize`)
+- Role hierarchy
+- Request validation (`@Valid`)
+- Global exception handling
+
+---
+
+### Running Tests
+
+| Action | Command |
+|-------|---------|
+| Run **all tests** | ```bash<br>./mvnw test``` |
+| Build project **without tests** | ```bash<br>./mvnw package -DskipTests``` |
+
+---
+
 
 ## 🔮 Postman Collection
 
